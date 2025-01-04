@@ -22,15 +22,21 @@ This project focuses on accelerating metric learning by employing a divide-and-c
 
 ## **Implementation Details**
 
+### **Algorithm Implementation**
+The main implementation of the algorithm can be found in the following files:
+- `train.py`: Handles the overall training pipeline, including dataset preparation, model training, and fine-tuning.
+- `lib/model.py`: Defines the model architecture and its components, including embedding layers and backbone.
+- `lib/clustering.py`: Implements the clustering algorithms used for dataset partitioning, such as K-Means and Faiss.
+
 ### **Dataset Partitioning**
-- Data is clustered into `K` groups using algorithms like:
+- Data is clustered into K groups using algorithms like:
   - K-Means (via sklearn)
   - Faiss for GPU-accelerated clustering
 - Each cluster corresponds to a specific subspace of the embedding space.
 
 ### **Model Partitioning**
-- The embedding layer of the model is split into `K` subspaces, each responsible for a specific data cluster.
-- For example, if the embedding size is `d` and the number of clusters is `K`, each sub-model learns a subspace of size `d/K`.
+- The embedding layer of the model is split into K subspaces, each responsible for a specific data cluster.
+- For example, if the embedding size is d and the number of clusters is K, each sub-model learns a subspace of size d/K.
 
 ### **Training Procedure**
 1. **Independent Training**:
@@ -43,6 +49,7 @@ This project focuses on accelerating metric learning by employing a divide-and-c
 3. **Merging and Fine-Tuning**:
    - All subspaces are merged into a single embedding layer.
    - The model is fine-tuned on the full dataset for global optimization.
+
 
 ---
 
@@ -67,7 +74,7 @@ The method has been tested on datasets like:
 ### **Setup**
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone git@github.com:Sloan-Yang/Cs240-Project.git
    cd cs240_project
    ```
 
@@ -78,7 +85,7 @@ The method has been tested on datasets like:
 
 ### **Run Training**
 ```bash
-CUDA_VISIBLE_DEVICES=0 python experiment.py --dataset=inshop \
+python experiment.py --dataset=inshop \
 --dir=test --exp=0 --random-seed=0 --nb-clusters=8 --nb-epochs=200 \
 --sz-batch=80 --backend=faiss-gpu  --embedding-lr=1e-5 --embedding-wd=1e-4 \
 --backbone-lr=1e-5 --backbone-wd=1e-4 --finetune-epoch=190
